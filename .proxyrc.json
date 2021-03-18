@@ -1,0 +1,9 @@
+{
+  "/api": {
+    "changeOrigin": true,
+    "target": "https://jobs.github.com",
+    "pathRewrite": {
+      "^/api": ""
+    }
+  }
+}
