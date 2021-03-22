@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {CompositeDecorator, Editor, EditorState, Modifier, SelectionState} from 'draft-js';
+import {Editor, EditorState, Modifier, SelectionState} from 'draft-js';
 import {createFromText} from 'draft-js/lib/ContentState';
 
 const getPosition = (audioPosition, audioLength, textLength) => {
@@ -27,55 +27,16 @@ const styles = {
     }
 }
 
-
-const AudioTrackingHighlight = (props) => {
-    return (
-        <i style={styles.highlight} data-offset-key={props.offsetKey}>
-            {props.children}
-        </i>
-    );
-}
-
 export const AudioTrackingEditor = ({audioProgress, audioLength, text}) => {
 
-    const compositeDecorator = new CompositeDecorator([
-        {
-            strategy: trackingStrategy,
-            component: AudioTrackingHighlight,
-        }
-    ]);
-
     const [editorState, setEditorState] = useState(
-        () => EditorState.createWithContent(createFromText(text), compositeDecorator)
+        () => EditorState.createWithContent(createFromText(text))
     );
-
-    function trackingStrategy(contentBlock, callback, contentState) {
-
-        if (isNaN((audioLength)) || isNaN(audioProgress)) {
-            console.log('not ready yet');
-            return
-        }
-
-        if (contentBlock.data.has('HIGHLIGHT')) {
-            console.log('found block with HIGHLIGHT', contentBlock.getText());
-            const textLength = contentState.getPlainText().length;
-            callback(0, getPosition(audioProgress, audioLength, textLength));
-        }
-    }
-
-    const forceRender = () => {
-        let content = editorState.getCurrentContent();
-        let newEditorState = EditorState.createWithContent(content, compositeDecorator);
-        setEditorState(newEditorState);
-    }
 
     const highlightText = () => {
         let currentContent = editorState.getCurrentContent();
         let textLength = currentContent.getPlainText().length;
         let audioPosition = getPosition(audioProgress, audioLength, textLength);
-
-        let newData = new Map();
-        newData.set('HIGHLIGHT', true)
 
         let characterCount = 0;
         let blockSize = editorState.getCurrentContent().getBlockMap().size;
@@ -89,7 +50,7 @@ export const AudioTrackingEditor = ({audioProgress, audioLength, text}) => {
                 let blockStyle = 'unstyled';
 
                 if (audioPosition > characterCount && audioPosition <= (characterCount + blockTextLength + blockSize - 1)) {
-                    blockStyle = 'blockquote';
+                    blockStyle = 'styled';
                 }
                 characterCount += blockTextLength;
 
@@ -104,15 +65,14 @@ export const AudioTrackingEditor = ({audioProgress, audioLength, text}) => {
             })
 
         let styledState = EditorState.push(editorState, state, 'change-block-data', false);
-        let newEditorState = EditorState.forceSelection(styledState, selection)
-        setEditorState(newEditorState);
+        setEditorState(styledState);
     }
 
     useEffect(() => highlightText(), [audioProgress]);
 
     const myBlockStyleFn = (contentBlock) => {
         const type = contentBlock.getType();
-        if (type === 'blockquote') {
+        if (type === 'styled') {
             return 'superFancyBlockquote';
         }
     }
