@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {CompositeDecorator, Editor, EditorState, Modifier, SelectionState} from 'draft-js';
+import {Editor, EditorState, ContentBlock, ContentState, genKey} from 'draft-js';
 import {createFromText} from 'draft-js/lib/ContentState';
 
 const getPosition = (audioPosition, audioLength, textLength) => {
@@ -37,37 +37,9 @@ const AudioTrackingHighlight = (props) => {
 }
 
 export const AudioTrackingEditor = ({audioProgress, audioLength, text}) => {
-
-    const compositeDecorator = new CompositeDecorator([
-        {
-            strategy: trackingStrategy,
-            component: AudioTrackingHighlight,
-        }
-    ]);
-
     const [editorState, setEditorState] = useState(
-        () => EditorState.createWithContent(createFromText(text), compositeDecorator)
+        () => EditorState.createWithContent(createFromText(text))
     );
-
-    function trackingStrategy(contentBlock, callback, contentState) {
-
-        if (isNaN((audioLength)) || isNaN(audioProgress)) {
-            console.log('not ready yet');
-            return
-        }
-
-        if (contentBlock.data.has('HIGHLIGHT')) {
-            console.log('found block with HIGHLIGHT', contentBlock.getText());
-            const textLength = contentState.getPlainText().length;
-            callback(0, getPosition(audioProgress, audioLength, textLength));
-        }
-    }
-
-    const forceRender = () => {
-        let content = editorState.getCurrentContent();
-        let newEditorState = EditorState.createWithContent(content, compositeDecorator);
-        setEditorState(newEditorState);
-    }
 
     const highlightText = () => {
         let currentContent = editorState.getCurrentContent();
@@ -79,40 +51,41 @@ export const AudioTrackingEditor = ({audioProgress, audioLength, text}) => {
 
         let characterCount = 0;
         let blockSize = editorState.getCurrentContent().getBlockMap().size;
-        let state = editorState.getCurrentContent();
-        let selection = editorState.getSelection();
 
-        editorState.getCurrentContent()
-            .getBlockMap()
-            .forEach(block => {
+        let blocks = editorState.getCurrentContent().getBlockMap().map(block => {
                 let blockTextLength = block.getText().length;
                 let blockStyle = 'unstyled';
 
                 if (audioPosition > characterCount && audioPosition <= (characterCount + blockTextLength + blockSize - 1)) {
-                    blockStyle = 'blockquote';
+                    blockStyle = 'styled';
                 }
                 characterCount += blockTextLength;
 
                 if (block.getType() !== blockStyle) {
-                    state = Modifier.setBlockType(
-                        state,
-                        SelectionState.createEmpty(block.getKey()),
-                        blockStyle
-                    );
+
+                    return new ContentBlock({
+                        key: genKey(),
+                        type: blockStyle,
+                        text: block.getText(),
+                        characterList: block.getCharacterList()
+                    })
                 }
 
+                return block;
             })
 
-        let styledState = EditorState.push(editorState, state, 'change-block-data', false);
-        let newEditorState = EditorState.forceSelection(styledState, selection)
-        setEditorState(newEditorState);
+        let styledState = EditorState.push(
+            editorState,
+            ContentState.createFromBlockArray(blocks.toArray())
+        )
+        setEditorState(styledState);
     }
 
     useEffect(() => highlightText(), [audioProgress]);
 
     const myBlockStyleFn = (contentBlock) => {
         const type = contentBlock.getType();
-        if (type === 'blockquote') {
+        if (type === 'styled') {
             return 'superFancyBlockquote';
         }
     }
