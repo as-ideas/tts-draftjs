@@ -65,7 +65,7 @@ export const AudioTrackingEditor = ({audioProgress, audioLength, text}) => {
             })
 
         let styledState = EditorState.push(editorState, state, 'change-block-data', false);
-        setEditorState(styledState);
+        onEditorChange(styledState);
     }
 
     useEffect(() => highlightText(), [audioProgress]);
@@ -76,6 +76,9 @@ export const AudioTrackingEditor = ({audioProgress, audioLength, text}) => {
             return 'superFancyBlockquote';
         }
     }
+    const onEditorChange = (newState) => {
+        setEditorState(newState);
+    }
 
     return (
         <div style={styles.root}>
@@ -83,7 +86,7 @@ export const AudioTrackingEditor = ({audioProgress, audioLength, text}) => {
             <div style={styles.editor}>
                 <Editor editorState={editorState}
                         blockStyleFn={myBlockStyleFn}
-                        onChange={setEditorState}/>
+                        onChange={onEditorChange}/>
             </div>
         </div>
     );
