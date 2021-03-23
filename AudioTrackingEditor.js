@@ -35,13 +35,13 @@ export const AudioTrackingEditor = ({audioProgress, audioLength, text}) => {
 
     const highlightText = () => {
         let currentContent = editorState.getCurrentContent();
+        let selection = editorState.getSelection();
         let textLength = currentContent.getPlainText().length;
         let audioPosition = getPosition(audioProgress, audioLength, textLength);
 
         let characterCount = 0;
         let blockSize = editorState.getCurrentContent().getBlockMap().size;
         let state = editorState.getCurrentContent();
-        let selection = editorState.getSelection();
 
         editorState.getCurrentContent()
             .getBlockMap()
@@ -61,11 +61,11 @@ export const AudioTrackingEditor = ({audioProgress, audioLength, text}) => {
                         blockStyle
                     );
                 }
-
-            })
+            });
 
         let styledState = EditorState.push(editorState, state, 'change-block-data', false);
-        onEditorChange(styledState);
+        let updateState = EditorState.acceptSelection(styledState, selection);
+        onEditorChange(updateState);
     }
 
     useEffect(() => highlightText(), [audioProgress]);
