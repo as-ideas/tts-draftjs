@@ -1,3 +1,8 @@
 .superFancyBlockquote {
-    background: whitesmoke;
+    background: beige;
+}
+
+.darkmode {
+    color: seashell;
+    background-color: black;
 }
