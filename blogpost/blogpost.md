@@ -9,10 +9,10 @@ If you listen to one of the many articles published by the newspaper welt.de, yo
 a product of aravoices.ai.
 
 The synthesis is done using a mix of trained ai-models which take the article to read as an input. 
-go to XXXX to find out more about the ai part, driving the synthesis. Back to text! When reading 
+Go to XXXX /* add link */ to find out more about the ai part, driving the synthesis. Back to text! When reading 
 out an article, some words are not pronounced the way they are written. For example the German 
 word "Weg" for path and the adverb "weg" meaning away. To fine tune the voice we at aravoices.ai 
-give the customer a quality-control dashboard where she can adjust the pronunciation of 
+give the customer a quality-control dashboard where she/he can adjust the pronunciation of 
 certain words if needed.
 
 ![](./aravoices.png)
@@ -27,7 +27,7 @@ __Challenge Accepted. Let's start ~~coding~ drawing!__
 
 The Idea is simple: Have the audio player tell the editor the current audio position and let the editor 
 do the highlighting. One could highlight the current character, the word or current paragraph. To convert 
-the current audio position to a position on the text, we will be using the following magic position 
+the current audio position to a position in the text, we will be using the following magic position 
 conversion formula:
 
 ```js
@@ -38,9 +38,9 @@ export const getPosition = (audioPosition, audioLength, textLength) => {
   }
 ``` 
 
-The audio html ```<audio/>``` element enables playing sound files on the web. To read about it, go over to 
+The audio html ```<audio/>``` element enables playing sound files on the web. To read about it, head over to 
 the [mdn reference for the audio element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio). 
-The element provides you with a few interesting events and properties that we need in order to track the progress:
+The element provides you with a couple of interesting events and properties that we need in order to track the progress:
 
 ```js
 const soundFile =
@@ -100,7 +100,7 @@ Let's start by a toy example changing the block to a 'dark-mode'. Inverting the 
 the editor's content whenever the user clicks the button. The ```<Editor/>``` component is provided by draftjs and 
 provides us with a textarea allowing the user to enter text. To avoid race conditions, the draftjs tutorial page 
 tells us to do any external editorState change via the [onChange handler](https://draftjs.org/docs/advanced-topics-editorstate-race-conditions/), 
-which we are doing is using React's useState hook. We have another state holding the boolean whether we dark-mode 
+which we are doing by using React's useState hook. We have another state holding the boolean whether the dark-mode 
 is enabled or not. 
 
 The only thing missing is telling draftjs what class to apply when a block has the type 'styled'. For that we are using 
@@ -170,15 +170,15 @@ block gets the darkmode class once you hit that toggle button.
 
 ![](./darkmode.png)
 
-Nice. Whenever draftjs registers a change in the content, it updates its internal model applies our darkMode 
+Nice. Whenever draftjs registers a change in the content, it updates its internal model, applies our darkMode 
 toggle function, applies the class and renders the result. Darkmode check!
 
 __Now on to the big finale.__
 
 We know how to calculate the current audio position and how to calculate the character position using our 
-```getPosition()``` function. And we know how to apply a CSS class to of a block of content. Time to connect the 
+```getPosition()``` function. And we know how to apply a CSS class to a block of content. Time to connect the 
 dots. Luckily we have everything in place and only need to change the way we decide when to apply the style 
-to a block or not. Let me introduce to you the new ```highlightText()``` function:
+to a block or not. Let me introduce you to the new ```highlightText()``` function:
 
 ```js
     const highlightText = (audioPosition, editorState) => {
@@ -212,8 +212,8 @@ __Success!__
 
 ![](./audioTrackingExample.gif)
 
-Yes, our solution is not the best but good enough to give the proof reading person a rough indication where she is. One could 
-ask the backend to send a more precice audio position along with the text. But first let us see how far we get with our current
+Yes, our solution is not the best but good enough to give the proof reading person a rough indication where she/he is. One could 
+ask the backend to send a more precise audio position along with the text. But first let us see how far we get with our current
 implementation.
 
 *If you are based in Berlin and are interested in working with passionate developers, drop us an email at hello@asideas.de :-)*
