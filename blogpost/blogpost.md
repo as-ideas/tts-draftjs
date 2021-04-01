@@ -3,12 +3,12 @@
 Implementing an audio tracking enabled editor using draft.js
 ============================================================
 
-aravoices is a text-to-speech service that allows customer to convert written text into audio files 
+[aravoices](https://aravoices.ai) is a text-to-speech service that allows customer to convert written text into audio files 
 using individual brand voices. Think Alexa reading you an article but using your unique 'brand' voice. 
 The first synthetic brand voice was produced for the news publisher WELT.de. aravoices supplies not only the voice but also allows the publisher to produce and deliver audio articles at scale and faster than real-time to WELT listeners.Thus enabeling WELT.de to offer a fully-automatic read-aloud feature for articles on their website.
 
 The synthesis is done using deep learning models, which take text as input and produce audio as output. 
-Go to XXXX /* add link */ to find out more about our AI approach. Back to text! 
+Go to [my collegues blog post](https://odsc.com/blog/brand-voice-deep-learning-for-speech-synthesis/) to find out more about our AI approach. Back to text! 
 
 When listening to an audio article, one hears that some words are not pronounced correctly. For example the English-German ("Denglish") 
 word "homeschoolen" might be pronounced German. To fine tune the pronounciation of certain words and ensure high quality, we at aravoices
