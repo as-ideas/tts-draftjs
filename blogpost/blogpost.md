@@ -3,23 +3,23 @@
 Implementing an audio tracking enabled editor using draft.js
 ============================================================
 
-Aravoices.ai is a service that allows customers to synthesize written articles into an audio file 
-using custom voices. Think Alexa reading you an article but using your 'brand' specific voice. 
-If you listen to one of the many articles published by the newspaper welt.de, you listen to 
-a product of aravoices.ai.
+aravoices is a text-to-speech service that allows customer to convert written text into audio files 
+using individual brand voices. Think Alexa reading you an article but using your unique 'brand' voice. 
+The first synthetic brand voice was produced for the news publisher WELT.de. aravoices supplies not only the voice but also allows the publisher to produce and deliver audio articles at scale and faster than real-time to WELT listeners.Thus enabeling WELT.de to offer a fully-automatic read-aloud feature for articles on their website.
 
-The synthesis is done using a mix of trained ai-models which take the article to read as an input. 
-Go to XXXX /* add link */ to find out more about the ai part, driving the synthesis. Back to text! When reading 
-out an article, some words are not pronounced the way they are written. For example the German 
-word "Weg" for path and the adverb "weg" meaning away. To fine tune the voice we at aravoices.ai 
-give the customer a quality-control dashboard where she/he can adjust the pronunciation of 
-certain words if needed.
+The synthesis is done using deep learning models, which take text as input and produce audio as output. 
+Go to XXXX /* add link */ to find out more about our AI approach. Back to text! 
+
+When listening to an audio article, one hears that some words are not pronounced correctly. For example the English-German ("Denglish") 
+word "homeschoolen" might be pronounced German. To fine tune the pronounciation of certain words and ensure high quality, we at aravoices
+provide a quality-control dashboard to our customers, where they can adjust the pronunciation of 
+certain words and persist those changes in our replacement librarby (= aravoices dictionary). 
 
 ![](./aravoices.png)
 
-Now, imaging proof-listening an article using the written article as a reference with hundreds of words. 
-You most likely lose track. To aid the customer we want to give an indication where the current audio 
-position is relative to the text, similar to subtitles while watching a video.
+Now, imagine proof-listening an article using the written article - with hundreds of words - as a reference. 
+You most likely will lose track. In order to make the work of the quality controller easier, we provide an indication, where the current audio 
+position is relative to the text - similar to videos with subtitles.
 
 __Challenge Accepted. Let's start ~~Coding~~ drawing!__
 
@@ -205,15 +205,14 @@ to a block or not. Let me introduce to you the ```highlightText()``` function:
         return EditorState.acceptSelection(styledState, selection);
     }
 ```
-Checkout the example. We now got an editor allowing the user to edit the text, while highlighting roughly the 
-current audio position by highlighting the paragraph/block.
+Check-out the example. We now implemented an editor, which allows the quality controller to listen to the audio and at the same time keep track of the text being read out by highlighting the respective paragraph/block.
 
 __Success!__
 
 ![](./audioTrackingExample.gif)
 
-Yes, our solution is not the best in terms of audio position percision but good enough to give the proof reading person a 
-rough indication where she/he is. One could ask the backend to send a more precise audio position information along with the text. 
-But first let us see how far we get with our current implementation.
+Yes, our solution is not the best but good enough to give the proof listener a rough indication where she/he is. One could 
+ask the backend to send a more precise audio position along with the text. But first let us see how far we get with our current
+implementation.
 
 *If you are based in Berlin, or want to, and are interested in working with passionate developers, drop us an email at hello@asideas.de :-)*
