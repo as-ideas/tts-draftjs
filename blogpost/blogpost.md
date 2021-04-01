@@ -21,11 +21,11 @@ Now, imaging proof-listening an article using the written article as a reference
 You most likely lose track. To aid the customer we want to give an indication where the current audio 
 position is relative to the text, similar to subtitles while watching a video.
 
-__Challenge Accepted. Let's start ~~coding~ drawing!__
+__Challenge Accepted. Let's start ~~Coding~~ drawing!__
 
 ![](./theplan.png)
 
-The Idea is simple: Have the audio player tell the editor the current audio position and let the editor 
+The Idea is simple: Have the audio player tell the text editor the current audio position and let the text editor 
 do the highlighting. One could highlight the current character, the word or current paragraph. To convert 
 the current audio position to a position in the text, we will be using the following magic position 
 conversion formula:
@@ -80,13 +80,13 @@ using the events provided by the audio element. Once the audio file has been loa
 informs interested parties about details on the audio file. Whenever the playback time changes, the audio 
 element emits an ```TimeUpdate``` event which we can use. Getting the current audio playing time using the 
 ```currentTime``` property of the audio element was not so hard after all. We save everything in the 
-components own state.
+component's own state.
 
 To get fine grain control of the update frequency one could use the ```setInterval``` function for polling instead. 
 If you need a more stable polling frequency one could use the [requestAnimationFrame function instead](https://stackoverflow.com/questions/34766476/how-to-lock-fps-with-requestanimationframe). 
 The event fired by the audio element is good enough for me.
 
-The Next challenge is letting the editor know about the current audio position, estimating the position in the 
+The next challenge is letting the editor know about the current audio position, estimating the position in the 
 text and highlighting the corresponding paragraph. For the editor we will be using the [draft.js package provided by Facebook](https://draft.js).
 
 Draft.js has an immutable internal model called the *EditorState*. It contains one model holding all the information about 
@@ -96,7 +96,7 @@ __type property__ to 'style' the current text block relative to the audio positi
 
 ![](./draftjs.png)
 
-Let's start by a toy example changing the block to a 'dark-mode'. Inverting the text color and background color of 
+Let's start by a toy example changing all blocks to a 'dark-mode': Inverting the text color and background color of 
 the editor's content whenever the user clicks the button. The ```<Editor/>``` component is provided by draftjs and 
 provides us with a textarea allowing the user to enter text. To avoid race conditions, the draftjs tutorial page 
 tells us to do any external editorState change via the [onChange handler](https://draftjs.org/docs/advanced-topics-editorstate-race-conditions/), 
@@ -136,12 +136,12 @@ export const DarkModeEditor = () => {
 Whenever the user clicks the toggle dark mode button the function ```toogleDarkMode``` is being called with two arguments: 
 the current darkmode flag and the current editorState. When we want to toggle the darkmode we want to mutate the current 
 editorState, namely change each block type and create a new editorState which we hand back to the previously 
-mentioned onChange handler.
+mentioned ```onChange``` handler.
 
 Once you understand that draftjs is using an immutable data model behind the scenes it becomes clear that the only way 
-to 'change' something you have to create a new state based on the existing one. In our toggleDarkMode function we take 
-the current editorState, iterate over all blocks and modify the block type. Once we are done, we create a 
-new editorState styledState, reset the selectionState to the original one and hand back the final 'merged' editorState.
+to 'change' something you have to create a new state based on the existing one. In our ```toggleDarkMode``` function we take 
+the current editorState, iterate over all blocks and modify each block type. Once we are done, we create a 
+new editorState, reset the selectionState to the original one and hand back the final 'merged' editorState.
 
 ```js  
 const toggleDarkMode = (darkModeEnabled, editorState) => {
@@ -178,7 +178,7 @@ __Now on to the big finale.__
 We know how to calculate the current audio position and how to calculate the character position using our 
 ```getPosition()``` function. And we know how to apply a CSS class to a block of content. Time to connect the 
 dots. Luckily we have everything in place and only need to change the way we decide when to apply the style 
-to a block or not. Let me introduce you to the new ```highlightText()``` function:
+to a block or not. Let me introduce to you the ```highlightText()``` function:
 
 ```js
     const highlightText = (audioPosition, editorState) => {
@@ -206,14 +206,14 @@ to a block or not. Let me introduce you to the new ```highlightText()``` functio
     }
 ```
 Checkout the example. We now got an editor allowing the user to edit the text, while highlighting roughly the 
-current audio position by highlighting the paragraph.
+current audio position by highlighting the paragraph/block.
 
 __Success!__
 
 ![](./audioTrackingExample.gif)
 
-Yes, our solution is not the best but good enough to give the proof reading person a rough indication where she/he is. One could 
-ask the backend to send a more precise audio position along with the text. But first let us see how far we get with our current
-implementation.
+Yes, our solution is not the best in terms of audio position percision but good enough to give the proof reading person a 
+rough indication where she/he is. One could ask the backend to send a more precise audio position information along with the text. 
+But first let us see how far we get with our current implementation.
 
-*If you are based in Berlin and are interested in working with passionate developers, drop us an email at hello@asideas.de :-)*
+*If you are based in Berlin, or want to, and are interested in working with passionate developers, drop us an email at hello@asideas.de :-)*
