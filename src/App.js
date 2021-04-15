@@ -2,11 +2,17 @@ import React from 'react';
 import {AudioPlayer} from './audio/AudioPlayer';
 import {DarkModeEditor} from './darkmode/DarkModeEditor';
 import {AudioTrackingExample} from './audioTracking/AudioTrackingExample';
+import {ContextMenuEditor} from './contextMenu/ContextMenuEditor';
 
 export const App = () => {
 
     return (
         <main>
+            <div>
+                <h1>Context Menu</h1>
+                <ContextMenuEditor />
+            </div>
+
             <div>
                 <h1>The Audio player</h1>
                 <AudioPlayer/>
